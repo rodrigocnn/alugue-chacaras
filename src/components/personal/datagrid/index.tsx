@@ -32,7 +32,7 @@ import {
 import React from 'react';
 
 interface DataGridProps<T> {
-  data: T[];
+  data: T[] | [];
   columns: ColumnDef<T, any>[];
 }
 export const DataGrid = <T,>({ data, columns }: DataGridProps<T>) => {
@@ -152,10 +152,10 @@ export const DataGrid = <T,>({ data, columns }: DataGridProps<T>) => {
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
+        {/* <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{' '}
           {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
+        </div> */}
         <div className="space-x-2">
           <Button
             variant="outline"
@@ -163,7 +163,7 @@ export const DataGrid = <T,>({ data, columns }: DataGridProps<T>) => {
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            Previous
+            Anterior
           </Button>
           <Button
             variant="outline"
@@ -171,7 +171,7 @@ export const DataGrid = <T,>({ data, columns }: DataGridProps<T>) => {
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            Next
+            Pŕoximo
           </Button>
         </div>
       </div>
