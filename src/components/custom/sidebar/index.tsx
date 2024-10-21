@@ -34,7 +34,7 @@ const Sidebar = () => {
     {
       title: 'Proprietários',
       icon: <UserPlus className="h-5 w-5" />,
-      url: '/admin/clientes',
+      url: '/admin/proprietarios',
     },
     {
       title: 'Usuários',
