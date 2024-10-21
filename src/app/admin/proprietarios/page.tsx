@@ -13,7 +13,11 @@ export default function Proprietarios() {
   return (
     <Layout>
       <Button type="submit">Novo Proprietário</Button>
-      <DataGrid data={queryProprietarios.data || []} columns={columns} />
+      <DataGrid
+        filterField="name"
+        data={queryProprietarios.data || []}
+        columns={columns}
+      />
     </Layout>
   );
 }

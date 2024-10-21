@@ -12,7 +12,11 @@ export default function Imoveis() {
   return (
     <Layout>
       <Button type="submit">Novo Imóvel</Button>
-      <DataGrid data={queryImoveis.data || []} columns={columns} />
+      <DataGrid
+        filterField="name"
+        data={queryImoveis.data || []}
+        columns={columns}
+      />
     </Layout>
   );
 }

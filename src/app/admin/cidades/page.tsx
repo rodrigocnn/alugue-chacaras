@@ -13,7 +13,11 @@ export default function Cidades() {
   return (
     <Layout>
       <Button type="submit">Nova Cidade</Button>
-      <DataGrid data={queryCidades.data || []} columns={columns} />
+      <DataGrid
+        filterField="name"
+        data={queryCidades.data || []}
+        columns={columns}
+      />
     </Layout>
   );
 }
