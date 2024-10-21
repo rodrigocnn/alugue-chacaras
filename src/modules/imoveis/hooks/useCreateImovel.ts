@@ -8,7 +8,7 @@ import { FieldValues } from 'react-hook-form';
 import { imovelSchema } from '../validations';
 import { InputImovel, User } from '../interfaces';
 import { useGetCidades } from '@/modules/cidades/hooks/useGetCidades';
-import { useGetProprietarios } from './useGetProprietarios';
+import { useGetProprietarios } from '@/modules/proprietarios/hooks/useGetProprietarios';
 import api from '../../../services/api';
 
 interface IMultiSelectList {
