@@ -2,13 +2,13 @@
 
 import { Input } from '@/components/ui/input';
 
-import Layout from '@/components/custom/layout';
 import { Label } from '@/components/ui/label';
 import { Form, FormItem } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { useEffect, useState } from 'react';
-import { MultiSelect } from '@/components/custom/multi-select';
+import { Dropzone, FileMosaic } from '@files-ui/react';
+import { useForm } from 'react-hook-form';
+import { FormFieldCustom } from '@/components/custom/input-form';
 import {
   Select,
   SelectContent,
@@ -18,43 +18,32 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
+import Layout from '@/components/custom/layout';
 import { SeparatorForm } from '@/components/custom/separator-form';
-import { useGetCidades } from '@/modules/cidades/hooks/useGetCidades';
-import { FieldValues, useForm } from 'react-hook-form';
-import { FormFieldCustom } from '@/components/custom/input-form';
-
-interface IMultiSelectList {
-  value: string;
-  label: string;
-}
+import { useCreateImovel } from '@/modules/imoveis/hooks/useCreateImovel';
+import { Checkbox } from '@/components/ui/checkbox';
+import InputMoney from '@/components/custom/input-money';
 
 export default function AdicionarImovel() {
-  const [selectedFrameworks, setSelectedFrameworks] = useState<string[]>([]);
-  const [selectCidades, setSelectCidades] = useState<IMultiSelectList[]>([]);
-  const { queryCidades } = useGetCidades();
   const form = useForm();
-
-  useEffect(() => {
-    const gerarSelectCidades = () => {
-      if (queryCidades.data) {
-        const result = queryCidades.data.map((cidade) => {
-          return { value: cidade.id as string, label: cidade.name };
-        });
-        setSelectCidades(result);
-      }
-    };
-
-    gerarSelectCidades();
-  }, [queryCidades.data]);
-
-  const onSubmit = (data: FieldValues) => {
-    console.log('Data', data);
-  };
+  const {
+    onSubmit,
+    selectCidades,
+    selectProprietarios,
+    valorACombinar,
+    imagemDestaque,
+    updateImagemDestaque,
+    manipularCheckbox,
+  } = useCreateImovel();
 
   return (
     <Layout bgColor="transparent">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form
+          encType="multipart/form-data"
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-8"
+        >
           <div className="flex gap-4">
             <div className="w-3/5 flex  flex-col">
               <div className="bg-white flex p-4 gap-4 flex-col">
@@ -62,14 +51,71 @@ export default function AdicionarImovel() {
                   name={'name'}
                   label="Nome da Propriedade"
                   form={form}
-                  component={<Input />}
+                  component={<Input autoComplete="off" />}
+                />
+
+                <FormFieldCustom
+                  label="Proprietários"
+                  name="userId"
+                  form={form}
+                  component={
+                    <Select
+                      onValueChange={(value) => form.setValue('userId', value)}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Selecione Proprietário" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          {selectProprietarios.map((user: any) => (
+                            <SelectItem key={user.value} value={user.value}>
+                              {user.label}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  }
+                />
+
+                <div className="flex gap-4">
+                  <InputMoney
+                    disabled={valorACombinar}
+                    form={form}
+                    label="Valor"
+                    name="value"
+                    placeholder="Valor do plano"
+                  />
+
+                  <div className="flex items-center pt-8  space-x-2">
+                    <Checkbox onCheckedChange={manipularCheckbox} id="terms" />
+                    <label
+                      htmlFor="terms"
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
+                      A combinar
+                    </label>
+                  </div>
+                </div>
+
+                <FormFieldCustom
+                  label="+ Informações do Valor "
+                  name="infoValue"
+                  form={form}
+                  component={
+                    <Input
+                      disabled={valorACombinar}
+                      placeholder="Ex: Valor por 3 dias"
+                      autoComplete="off"
+                    />
+                  }
                 />
 
                 <FormFieldCustom
                   name="description"
                   label="Descrição"
                   form={form}
-                  component={<Textarea />}
+                  component={<Textarea autoComplete="off" />}
                 />
               </div>
 
@@ -80,94 +126,113 @@ export default function AdicionarImovel() {
                   name="about"
                   label="Sobre"
                   form={form}
-                  component={<Textarea />}
+                  component={<Textarea autoComplete="off" />}
                 />
 
                 <div className="flex gap-2">
                   <FormFieldCustom
-                    name="about"
+                    name="bedrooms  "
                     label="Quartos"
                     form={form}
-                    component={<Input type="number" />}
+                    component={<Input autoComplete="off" type="number" />}
                   />
 
                   <FormFieldCustom
                     name="bathrooms"
                     label="Banheiros"
                     form={form}
-                    component={<Input type="number" />}
+                    component={<Input autoComplete="off" type="number" />}
                   />
                   <FormFieldCustom
                     name="accommodations"
                     label="Acomodações"
                     form={form}
-                    component={<Input type="number" />}
+                    component={<Input autoComplete="off" type="number" />}
                   />
-
-                  <FormItem>
-                    <Label>Salão de Festas?</Label>
-                    <Select>
-                      <SelectTrigger className="w-[180px]">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectItem value="apple">Apple</SelectItem>
-                          <SelectItem value="banana">Banana</SelectItem>
-                          <SelectItem value="blueberry">Blueberry</SelectItem>
-                          <SelectItem value="grapes">Grapes</SelectItem>
-                          <SelectItem value="pineapple">Pineapple</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </FormItem>
                 </div>
+
+                <FormFieldCustom
+                  label="Salão de Festas"
+                  name="partyHall"
+                  form={form}
+                  component={<Input autoComplete="off" />}
+                />
 
                 <FormFieldCustom
                   label="Lazer"
                   name="leisure"
                   form={form}
-                  component={<Input />}
+                  component={<Input autoComplete="off" />}
                 />
 
-                <FormFieldCustom
-                  label="Localicação"
-                  name="location"
-                  form={form}
-                  component={<Input />}
-                />
-
-                <FormFieldCustom
-                  label="Google Maps"
-                  name="googleMaps"
-                  form={form}
-                  component={<Input />}
-                />
                 <div>
                   <Button type="submit">Salvar</Button>
                 </div>
               </div>
             </div>
 
-            <div className="w-2/5 bg-white flex p-4 gap-4 flex-col">
-              <div className="flex gap-4 flex-col">
+            <div className="w-2/5  flex  flex-col">
+              <div className="flex bg-white gap-4  p-4  flex-col">
                 <FormItem>
-                  <Label>Cidades</Label>
-
-                  <MultiSelect
-                    options={selectCidades}
-                    onValueChange={setSelectedFrameworks}
-                    defaultValue={selectedFrameworks}
-                    placeholder="Selecione Cidades"
-                    variant="inverted"
-                    animation={2}
-                    maxCount={3}
-                  />
+                  <Label>Imagem de Destaque</Label>
+                  <Dropzone
+                    localization={'PT-pt'}
+                    onChange={updateImagemDestaque}
+                    value={imagemDestaque}
+                    maxFiles={1}
+                    accept="image/*"
+                    footer={false}
+                  >
+                    {imagemDestaque.map((file: any) => (
+                      <FileMosaic key={file} {...file} preview />
+                    ))}
+                  </Dropzone>
                 </FormItem>
+              </div>
+              <SeparatorForm title="Localização" />
 
-                <div>
-                  <Button type="submit">Adicionar Fotos</Button>
-                </div>
+              <div className="flex bg-white gap-4  p-4 flex-col">
+                <FormFieldCustom
+                  label="Cidades"
+                  name="cityId"
+                  form={form}
+                  component={
+                    <Select
+                      onValueChange={(value) => form.setValue('cityId', value)} // Atualiza o campo manualmente
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Selecione uma cidade" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          {selectCidades.map((cidade) => (
+                            <SelectItem key={cidade.value} value={cidade.value}>
+                              {cidade.label}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  }
+                />
+
+                <FormFieldCustom
+                  label="Localização"
+                  name="location"
+                  form={form}
+                  component={<Input autoComplete="off" />}
+                />
+                <FormFieldCustom
+                  label="Google Maps"
+                  name="googleMapsUrl"
+                  form={form}
+                  component={
+                    <Input
+                      placeholder="Link do Google Maps"
+                      autoComplete="off"
+                    />
+                  }
+                />
               </div>
             </div>
           </div>
