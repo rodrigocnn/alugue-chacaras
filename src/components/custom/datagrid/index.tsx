@@ -34,8 +34,13 @@ import React from 'react';
 interface DataGridProps<T> {
   data: T[] | [];
   columns: ColumnDef<T, any>[];
+  filterField: string;
 }
-export const DataGrid = <T,>({ data, columns }: DataGridProps<T>) => {
+export const DataGrid = <T,>({
+  data,
+  columns,
+  filterField,
+}: DataGridProps<T>) => {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -67,10 +72,12 @@ export const DataGrid = <T,>({ data, columns }: DataGridProps<T>) => {
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn('email')?.getFilterValue() as string) ?? ''}
+          placeholder="Filtrar"
+          value={
+            (table.getColumn(filterField)?.getFilterValue() as string) ?? ''
+          }
           onChange={(event) =>
-            table.getColumn('email')?.setFilterValue(event.target.value)
+            table.getColumn(filterField)?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
