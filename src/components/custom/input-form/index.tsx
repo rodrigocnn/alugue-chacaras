@@ -22,7 +22,11 @@ export function FormFieldCustom({
       render={({ field }) => (
         <FormItem>
           <FormLabel>{label}</FormLabel>
-          {React.cloneElement(component as React.ReactElement, { ...field })}
+          {React.cloneElement(component as React.ReactElement, {
+            ...field,
+            onChange: (value: any) => field.onChange(value),
+            value: field.value,
+          })}
         </FormItem>
       )}
     />
