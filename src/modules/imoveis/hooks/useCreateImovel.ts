@@ -107,17 +107,16 @@ export function useCreateImovel() {
   const onSubmit = async (data: FieldValues) => {
     const imovel = data as InputImovel;
 
-    const formData = new FormData();
-    formData.append('imagemDestaque', imagemDestaque[0].file);
-    formData.append('name', imovel.name);
-    formData.append('description', imovel.description);
-    formData.append('location', imovel.location);
-    formData.append('cityId', imovel.cityId);
-    formData.append('googleMapsUrl', imovel.cityId);
-    formData.append('toBeAgreed', String(valorACombinar));
-
     if (await validation(imovel)) {
-      console.log('Imovel', imovel);
+      const formData = new FormData();
+      formData.append('imagemDestaque', imagemDestaque[0].file);
+      formData.append('name', imovel.name);
+      formData.append('description', imovel.description);
+      formData.append('location', imovel.location);
+      formData.append('cityId', imovel.cityId);
+      formData.append('googleMapsUrl', imovel.cityId);
+      formData.append('value', imovel.value);
+      formData.append('toBeAgreed', String(valorACombinar));
       mutation.mutate(formData);
     }
   };
