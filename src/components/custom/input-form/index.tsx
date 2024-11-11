@@ -25,7 +25,7 @@ export function FormFieldCustom({
           {React.cloneElement(component as React.ReactElement, {
             ...field,
             onChange: (value: any) => field.onChange(value),
-            value: field.value,
+            value: field.value || '',
           })}
         </FormItem>
       )}
