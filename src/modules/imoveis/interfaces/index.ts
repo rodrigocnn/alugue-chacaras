@@ -6,6 +6,7 @@ export interface Imovel {
   googleMapsUrl: string;
   cityId: string;
   imgFeature: string;
+  value: string;
 }
 
 export interface InputImovel extends Imovel {
